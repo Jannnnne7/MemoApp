@@ -24,7 +24,7 @@ export default function MemoDetailScreen(props) {
         console.log(doc.id, doc.data());
         const data = doc.data();
         setMemo({
-          id: data.id,
+          id: doc.id,
           bodyText: data.bodyText,
           updatedAt: data.updatedAt.toDate(),
         });
@@ -47,7 +47,7 @@ export default function MemoDetailScreen(props) {
       <CircleButton
         style={{ top: 60, bottom: 'auto' }}
         name="pencil"
-        onPress={() => { navigation.navigate('MemoEdit'); }}
+        onPress={() => { navigation.navigate('MemoEdit', { id: memo.id, bodyText: memo.bodyText }); }}
       />
     </View>
   );
