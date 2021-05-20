@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, Alert,
+  View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -12,26 +12,35 @@ import Icon from './Icon';
 export default function MemoList(props) {
   const { memos } = props;
   const navigation = useNavigation();
-  return (
-    <View>
-      {memos.map((memo) => (
+
+  function renderItem({ item }) {
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={styles.memoListItem}
+        onPress={() => { navigation.navigate('MemoDetail'); }}
+      >
+        <View>
+          <Text style={styles.memoListItemTitle} numberOfLines={1}>{item.bodyText}</Text>
+          <Text style={styles.memoListItemDate}>{String(item.updatedAt)}</Text>
+        </View>
         <TouchableOpacity
-          key={memo.id}
-          style={styles.memoListItem}
-          onPress={() => { navigation.navigate('MemoDetail'); }}
+          style={styles.memoDelete}
+          onPress={() => { Alert.alert('Are you sure?'); }}
         >
-          <View>
-            <Text style={styles.memoListItemTitle}>{memo.bodyText}</Text>
-            <Text style={styles.memoListItemDate}>{String(memo.updatedAt)}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.memoDelete}
-            onPress={() => { Alert.alert('Are you sure?'); }}
-          >
-            <Icon name="delete" size={24} color="#B0B0B0" />
-          </TouchableOpacity>
+          <Icon name="delete" size={24} color="#B0B0B0" />
         </TouchableOpacity>
-      ))}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={memos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }
@@ -45,6 +54,9 @@ MemoList.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   memoListItem: {
     backgroundColor: '#ffffff',
     flexDirection: 'row',
